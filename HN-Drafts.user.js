@@ -33,20 +33,18 @@
       };
       generate_table();
       $('input[value="Delete"]').click(function() {
-        console.log($(this).parent().parent().find('a').attr('href'));
         localStorage.removeItem($(this).parent().parent().find('a').attr('href'));
         return generate_table();
       });
       break;
     default:
       for (url in localStorage) {
-        console.log(url);
         $("a[href=\"" + url + "\"]").after('<span style="color:red"> (draft saved)</span>');
       }
       add_comment = $('form input[type="submit"]');
+      add_comment.after('<input type="button" value="save draft">');
       save_draft = $('form input[type="button"]');
       textarea = $('textarea')[0];
-      add_comment.after('<input type="button" value="save draft">');
       key = (window.location.pathname + window.location.search).substr(1);
       if (localStorage.getItem(key) != null) {
         textarea.value = localStorage.getItem(key);

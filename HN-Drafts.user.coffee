@@ -4,22 +4,33 @@
 // @namespace   https://github.com/slang800/HN-drafts
 // @description Save to drafts button for HN
 // @include     http://news.ycombinator.com/reply*
+// @include     http://news.ycombinator.com/item*
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // @version     1
 // ==/UserScript==
 ###
 
-$('form input[type="submit"]').after("""
-	<input type="button" value="save draft">
-""")
+for url of localStorage
+	console.log url
+	$("a[href=\"#{url}\"]").after('<span style="color:red"> (draft saved)</span>')
 
-key = window.location.pathname + window.location.search
+
+add_comment = $('form input[type="submit"]')
+save_draft = $('form input[type="button"]')
 textarea = $('textarea')[0]
+
+add_comment.after('<input type="button" value="save draft">')
+
+key = (window.location.pathname + window.location.search).substr(1) # cut off slash at beginning of str
+
+
 if localStorage.getItem(key)?
 	textarea.value = localStorage.getItem(key)
-console.log textarea
 
-$('form input[type="button"]').click( ->
+save_draft.click( ->
 	localStorage.setItem(key, textarea.value)
-	console.log localStorage.getItem(key)
+)
+
+add_comment.click( ->
+	localStorage.removeItem(key)
 )

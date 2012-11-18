@@ -14,7 +14,7 @@
 
 
 (function() {
-  var add_comment, generate_table, key, save_draft, textarea, url;
+  var add_comment, draft_markers, generate_table, key, save_draft, textarea;
 
   switch (window.location.pathname) {
     case '/user':
@@ -38,9 +38,20 @@
       });
       break;
     default:
-      for (url in localStorage) {
-        $("a[href=\"" + url + "\"]").after('<span style="color:red"> (draft saved)</span>');
-      }
+      draft_markers = function() {
+        var link, url, _results;
+        _results = [];
+        for (url in localStorage) {
+          link = $("a[href=\"" + url + "\"]");
+          if (link.next().length === 0) {
+            _results.push(link.after('<span style="color:red"> (draft saved)</span>'));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      draft_markers();
       add_comment = $('form input[type="submit"]');
       add_comment.after('<input type="button" value="save draft">');
       save_draft = $('form input[type="button"]');
@@ -50,7 +61,8 @@
         textarea.value = localStorage.getItem(key);
       }
       save_draft.click(function() {
-        return localStorage.setItem(key, textarea.value);
+        localStorage.setItem(key, textarea.value);
+        return draft_markers();
       });
       add_comment.click(function() {
         return localStorage.removeItem(key);

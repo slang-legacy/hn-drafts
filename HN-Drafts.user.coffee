@@ -47,8 +47,13 @@ switch window.location.pathname
 		)
 
 	else
-		for url of localStorage
-			$("a[href=\"#{url}\"]").after('<span style="color:red"> (draft saved)</span>')
+		draft_markers = () ->
+			for url of localStorage
+				link = $("a[href=\"#{url}\"]")
+				if link.next().length is 0
+					link.after('<span style="color:red"> (draft saved)</span>')
+
+		draft_markers()
 
 		add_comment = $('form input[type="submit"]')
 		add_comment.after('<input type="button" value="save draft">')
@@ -64,6 +69,7 @@ switch window.location.pathname
 
 		save_draft.click( ->
 			localStorage.setItem(key, textarea.value)
+			draft_markers()
 		)
 
 		add_comment.click( ->

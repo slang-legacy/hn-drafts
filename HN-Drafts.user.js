@@ -12,7 +12,23 @@
 
 
 (function() {
+  var key, textarea;
 
   $('form input[type="submit"]').after("<input type=\"button\" value=\"save draft\">");
+
+  key = window.location.pathname + window.location.search;
+
+  textarea = $('textarea')[0];
+
+  if (localStorage.getItem(key) != null) {
+    textarea.value = localStorage.getItem(key);
+  }
+
+  console.log(textarea);
+
+  $('form input[type="button"]').click(function() {
+    localStorage.setItem(key, textarea.value);
+    return console.log(localStorage.getItem(key));
+  });
 
 }).call(this);
